@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using dotnet_Zookeeper;
     using Infrastructure.Extensions;
     using Logging;
     using Newtonsoft.Json;
@@ -15,20 +14,20 @@
     {
         private readonly ZookeeperRegistryConfiguration _config;
         private readonly IOcelotLogger _logger;
-        private readonly ZookeeperClient _ZookeeperClient;
+        private readonly ZookeeperClient _zookeeperClient;
         private const string VersionPrefix = "version-";
 
         public Zookeeper(ZookeeperRegistryConfiguration config, IOcelotLoggerFactory factory, IZookeeperClientFactory clientFactory)
         {
             _logger = factory.CreateLogger<Zookeeper>();
             _config = config;
-            _ZookeeperClient = clientFactory.Get(_config);
+            _zookeeperClient = clientFactory.Get(_config);
         }
 
         public async Task<List<Service>> Get()
         {
             // Services/srvname/srvid
-            var queryResult = await _ZookeeperClient.GetRangeAsync($"{_config.KeyOfServiceInZookeeper}/Services/");
+            var queryResult = await _zookeeperClient.GetRangeAsync($"{_config.KeyOfServiceInZookeeper}/Services/");
 
             // var queryResult = await _ZookeeperClient.Health.Service(_config.KeyOfServiceInZookeeper, string.Empty, true);
 

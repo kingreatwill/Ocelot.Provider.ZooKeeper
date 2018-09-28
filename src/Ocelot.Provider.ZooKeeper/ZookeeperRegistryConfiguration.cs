@@ -5,7 +5,7 @@
         public ZookeeperRegistryConfiguration(string host, int port, string keyOfServiceInZookeeper)
         {
             this.Host = string.IsNullOrEmpty(host) ? "localhost" : host;
-            this.Port = port > 0 ? port : 2379;
+            this.Port = port > 0 ? port : 2181;
             this.KeyOfServiceInZookeeper = keyOfServiceInZookeeper;
 
             // this.Token = token;

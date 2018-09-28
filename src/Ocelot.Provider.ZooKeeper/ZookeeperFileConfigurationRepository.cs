@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using Configuration.File;
     using Configuration.Repository;
-    using dotnet_Zookeeper;
     using Logging;
     using Newtonsoft.Json;
     using Responses;
@@ -54,7 +53,7 @@
             {
                 return new OkResponse<FileConfiguration>(config);
             }
-            var queryResult = await _ZookeeperClient.GetValAsync($"{_configurationKey}/FileConfiguration");
+            var queryResult = await _ZookeeperClient.GetAsync($"{_configurationKey}/FileConfiguration");
             if (string.IsNullOrWhiteSpace(queryResult))
             {
                 return new OkResponse<FileConfiguration>(null);
@@ -66,7 +65,7 @@
         public async Task<Response> Set(FileConfiguration ocelotConfiguration)
         {
             var json = JsonConvert.SerializeObject(ocelotConfiguration, Formatting.Indented);
-            var result = await _ZookeeperClient.PutAsync($"{_configurationKey}/FileConfiguration", json);
+            var result = await _ZookeeperClient.SetAsync($"{_configurationKey}/FileConfiguration", json);
 
             _cache.AddAndDelete(_configurationKey, ocelotConfiguration, TimeSpan.FromSeconds(3), _configurationKey);
 
