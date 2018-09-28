@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Rabbit.Zookeeper
+namespace Ocelot.Provider.ZooKeeper.Client
 {
     /// <summary>
     /// 一个抽象的ZooKeeper客户端。
@@ -14,7 +14,7 @@ namespace Rabbit.Zookeeper
         /// <summary>
         /// 具体的ZooKeeper连接。
         /// </summary>
-        ZooKeeper ZooKeeper { get; }
+        org.apache.zookeeper.ZooKeeper ZooKeeper { get; }
 
         /// <summary>
         /// 客户端选项。

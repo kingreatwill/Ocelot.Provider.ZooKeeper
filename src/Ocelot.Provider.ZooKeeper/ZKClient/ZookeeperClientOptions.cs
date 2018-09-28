@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rabbit.Zookeeper
+namespace Ocelot.Provider.ZooKeeper.Client
 {
     /// <summary>
     /// ZooKeeper客户端选项。

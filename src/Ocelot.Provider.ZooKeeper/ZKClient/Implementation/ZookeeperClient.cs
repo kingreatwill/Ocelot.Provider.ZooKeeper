@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rabbit.Zookeeper.Implementation
+namespace Ocelot.Provider.ZooKeeper.Client
 {
     /// <summary>
     /// ZooKeeper客户端。
@@ -57,7 +57,7 @@ namespace Rabbit.Zookeeper.Implementation
         /// <summary>
         /// 具体的ZooKeeper连接。
         /// </summary>
-        public ZooKeeper ZooKeeper { get; private set; }
+        public org.apache.zookeeper.ZooKeeper ZooKeeper { get; private set; }
 
         /// <summary>
         /// 客户端选项。
@@ -370,9 +370,9 @@ namespace Rabbit.Zookeeper.Implementation
             return _nodeEntries.GetOrAdd(path, k => new NodeEntry(path, this));
         }
 
-        private ZooKeeper CreateZooKeeper()
+        private org.apache.zookeeper.ZooKeeper CreateZooKeeper()
         {
-            return new ZooKeeper(Options.ConnectionString, (int)Options.SessionTimeout.TotalMilliseconds, this, Options.SessionId, Options.SessionPasswd, Options.ReadOnly);
+            return new org.apache.zookeeper.ZooKeeper(Options.ConnectionString, (int)Options.SessionTimeout.TotalMilliseconds, this, Options.SessionId, Options.SessionPasswd, Options.ReadOnly);
         }
 
         private async Task ReConnect()

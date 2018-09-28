@@ -7,6 +7,7 @@
     using Infrastructure.Extensions;
     using Logging;
     using Newtonsoft.Json;
+    using Ocelot.Provider.ZooKeeper.Client;
     using ServiceDiscovery.Providers;
     using Values;
 
@@ -27,9 +28,7 @@
         public async Task<List<Service>> Get()
         {
             // Services/srvname/srvid
-            var queryResult = await _zookeeperClient.GetRangeAsync($"{_config.KeyOfServiceInZookeeper}/Services/");
-
-            // var queryResult = await _ZookeeperClient.Health.Service(_config.KeyOfServiceInZookeeper, string.Empty, true);
+            var queryResult = await _zookeeperClient.GetRangeAsync($"/{_config.KeyOfServiceInZookeeper}/Services/");
 
             var services = new List<Service>();
 

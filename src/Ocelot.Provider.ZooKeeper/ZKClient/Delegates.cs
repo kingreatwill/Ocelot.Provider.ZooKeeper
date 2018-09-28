@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Rabbit.Zookeeper
+namespace Ocelot.Provider.ZooKeeper.Client
 {
     /// <summary>
     /// 连接状态变更事件参数。

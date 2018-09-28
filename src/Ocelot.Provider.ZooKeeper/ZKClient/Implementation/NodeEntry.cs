@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rabbit.Zookeeper.Implementation
+namespace Ocelot.Provider.ZooKeeper.Client
 {
     internal class NodeEntry
     {
