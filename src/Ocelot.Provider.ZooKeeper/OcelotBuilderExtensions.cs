@@ -8,18 +8,18 @@
 
     public static class OcelotBuilderExtensions
     {
-        public static IOcelotBuilder AddEtcd(this IOcelotBuilder builder)
+        public static IOcelotBuilder AddZookeeper(this IOcelotBuilder builder)
         {
-            builder.Services.AddSingleton<ServiceDiscoveryFinderDelegate>(EtcdProviderFactory.Get);
-            builder.Services.AddSingleton<IEtcdClientFactory, EtcdClientFactory>();
+            builder.Services.AddSingleton<ServiceDiscoveryFinderDelegate>(ZookeeperProviderFactory.Get);
+            builder.Services.AddSingleton<IZookeeperClientFactory, ZookeeperClientFactory>();
             return builder;
         }
 
-        public static IOcelotBuilder AddConfigStoredInEtcd(this IOcelotBuilder builder)
+        public static IOcelotBuilder AddConfigStoredInZookeeper(this IOcelotBuilder builder)
         {
-            builder.Services.AddSingleton<OcelotMiddlewareConfigurationDelegate>(EtcdMiddlewareConfigurationProvider.Get);
+            builder.Services.AddSingleton<OcelotMiddlewareConfigurationDelegate>(ZookeeperMiddlewareConfigurationProvider.Get);
             builder.Services.AddHostedService<FileConfigurationPoller>();
-            builder.Services.AddSingleton<IFileConfigurationRepository, EtcdFileConfigurationRepository>();
+            builder.Services.AddSingleton<IFileConfigurationRepository, ZookeeperFileConfigurationRepository>();
             return builder;
         }
     }

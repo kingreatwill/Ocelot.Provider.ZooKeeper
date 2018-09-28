@@ -4,33 +4,33 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using dotnet_etcd;
+    using dotnet_Zookeeper;
     using Infrastructure.Extensions;
     using Logging;
     using Newtonsoft.Json;
     using ServiceDiscovery.Providers;
     using Values;
 
-    public class Etcd : IServiceDiscoveryProvider
+    public class Zookeeper : IServiceDiscoveryProvider
     {
-        private readonly EtcdRegistryConfiguration _config;
+        private readonly ZookeeperRegistryConfiguration _config;
         private readonly IOcelotLogger _logger;
-        private readonly EtcdClient _etcdClient;
+        private readonly ZookeeperClient _ZookeeperClient;
         private const string VersionPrefix = "version-";
 
-        public Etcd(EtcdRegistryConfiguration config, IOcelotLoggerFactory factory, IEtcdClientFactory clientFactory)
+        public Zookeeper(ZookeeperRegistryConfiguration config, IOcelotLoggerFactory factory, IZookeeperClientFactory clientFactory)
         {
-            _logger = factory.CreateLogger<Etcd>();
+            _logger = factory.CreateLogger<Zookeeper>();
             _config = config;
-            _etcdClient = clientFactory.Get(_config);
+            _ZookeeperClient = clientFactory.Get(_config);
         }
 
         public async Task<List<Service>> Get()
         {
             // Services/srvname/srvid
-            var queryResult = await _etcdClient.GetRangeAsync($"{_config.KeyOfServiceInEtcd}/Services/");
+            var queryResult = await _ZookeeperClient.GetRangeAsync($"{_config.KeyOfServiceInZookeeper}/Services/");
 
-            // var queryResult = await _etcdClient.Health.Service(_config.KeyOfServiceInEtcd, string.Empty, true);
+            // var queryResult = await _ZookeeperClient.Health.Service(_config.KeyOfServiceInZookeeper, string.Empty, true);
 
             var services = new List<Service>();
 

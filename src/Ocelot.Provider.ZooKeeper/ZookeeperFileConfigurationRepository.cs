@@ -5,25 +5,25 @@
     using System.Threading.Tasks;
     using Configuration.File;
     using Configuration.Repository;
-    using dotnet_etcd;
+    using dotnet_Zookeeper;
     using Logging;
     using Newtonsoft.Json;
     using Responses;
 
-    public class EtcdFileConfigurationRepository : IFileConfigurationRepository
+    public class ZookeeperFileConfigurationRepository : IFileConfigurationRepository
     {
-        private readonly EtcdClient _etcdClient;
+        private readonly ZookeeperClient _ZookeeperClient;
         private readonly string _configurationKey;
         private readonly Cache.IOcelotCache<FileConfiguration> _cache;
         private readonly IOcelotLogger _logger;
 
-        public EtcdFileConfigurationRepository(
+        public ZookeeperFileConfigurationRepository(
             Cache.IOcelotCache<FileConfiguration> cache,
             IInternalConfigurationRepository repo,
-            IEtcdClientFactory factory,
+            IZookeeperClientFactory factory,
             IOcelotLoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<EtcdFileConfigurationRepository>();
+            _logger = loggerFactory.CreateLogger<ZookeeperFileConfigurationRepository>();
             _cache = cache;
 
             var internalConfig = repo.Get();
@@ -39,11 +39,11 @@
                     internalConfig.Data.ServiceProviderConfiguration.ConfigurationKey : _configurationKey;
             }
 
-            var config = new EtcdRegistryConfiguration(
+            var config = new ZookeeperRegistryConfiguration(
                 internalConfig.Data.ServiceProviderConfiguration.Host,
                 internalConfig.Data.ServiceProviderConfiguration.Port, _configurationKey);
 
-            _etcdClient = factory.Get(config);
+            _ZookeeperClient = factory.Get(config);
         }
 
         public async Task<Response<FileConfiguration>> Get()
@@ -54,25 +54,25 @@
             {
                 return new OkResponse<FileConfiguration>(config);
             }
-            var queryResult = await _etcdClient.GetValAsync($"{_configurationKey}/FileConfiguration");
+            var queryResult = await _ZookeeperClient.GetValAsync($"{_configurationKey}/FileConfiguration");
             if (string.IsNullOrWhiteSpace(queryResult))
             {
                 return new OkResponse<FileConfiguration>(null);
             }
-            var etcdConfig = JsonConvert.DeserializeObject<FileConfiguration>(queryResult);
-            return new OkResponse<FileConfiguration>(etcdConfig);
+            var ZookeeperConfig = JsonConvert.DeserializeObject<FileConfiguration>(queryResult);
+            return new OkResponse<FileConfiguration>(ZookeeperConfig);
         }
 
         public async Task<Response> Set(FileConfiguration ocelotConfiguration)
         {
             var json = JsonConvert.SerializeObject(ocelotConfiguration, Formatting.Indented);
-            var result = await _etcdClient.PutAsync($"{_configurationKey}/FileConfiguration", json);
+            var result = await _ZookeeperClient.PutAsync($"{_configurationKey}/FileConfiguration", json);
 
             _cache.AddAndDelete(_configurationKey, ocelotConfiguration, TimeSpan.FromSeconds(3), _configurationKey);
 
             return new OkResponse();
 
-            // return new ErrorResponse(new UnableToSetConfigInEtcdError($"Unable to set FileConfiguration in etcd, response status code from etcd was {result.StatusCode}"));
+            // return new ErrorResponse(new UnableToSetConfigInZookeeperError($"Unable to set FileConfiguration in Zookeeper, response status code from Zookeeper was {result.StatusCode}"));
         }
     }
 }

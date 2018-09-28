@@ -12,7 +12,7 @@
     using Middleware;
     using Responses;
 
-    public static class EtcdMiddlewareConfigurationProvider
+    public static class ZookeeperMiddlewareConfigurationProvider
     {
         public static OcelotMiddlewareConfigurationDelegate Get = async builder =>
         {
@@ -21,37 +21,37 @@
             var internalConfigCreator = builder.ApplicationServices.GetService<IInternalConfigurationCreator>();
             var internalConfigRepo = builder.ApplicationServices.GetService<IInternalConfigurationRepository>();
 
-            if (UsingEtcd(fileConfigRepo))
+            if (UsingZookeeper(fileConfigRepo))
             {
-                await SetFileConfigInEtcd(builder, fileConfigRepo, fileConfig, internalConfigCreator, internalConfigRepo);
+                await SetFileConfigInZookeeper(builder, fileConfigRepo, fileConfig, internalConfigCreator, internalConfigRepo);
             }
         };
 
-        private static bool UsingEtcd(IFileConfigurationRepository fileConfigRepo)
+        private static bool UsingZookeeper(IFileConfigurationRepository fileConfigRepo)
         {
-            return fileConfigRepo.GetType() == typeof(EtcdFileConfigurationRepository);
+            return fileConfigRepo.GetType() == typeof(ZookeeperFileConfigurationRepository);
         }
 
-        private static async Task SetFileConfigInEtcd(IApplicationBuilder builder,
+        private static async Task SetFileConfigInZookeeper(IApplicationBuilder builder,
             IFileConfigurationRepository fileConfigRepo, IOptionsMonitor<FileConfiguration> fileConfig,
             IInternalConfigurationCreator internalConfigCreator, IInternalConfigurationRepository internalConfigRepo)
         {
-            // get the config from Etcd.
-            var fileConfigFromEtcd = await fileConfigRepo.Get();
+            // get the config from Zookeeper.
+            var fileConfigFromZookeeper = await fileConfigRepo.Get();
 
-            if (IsError(fileConfigFromEtcd))
+            if (IsError(fileConfigFromZookeeper))
             {
-                ThrowToStopOcelotStarting(fileConfigFromEtcd);
+                ThrowToStopOcelotStarting(fileConfigFromZookeeper);
             }
-            else if (ConfigNotStoredInEtcd(fileConfigFromEtcd))
+            else if (ConfigNotStoredInZookeeper(fileConfigFromZookeeper))
             {
-                //there was no config in etcd set the file in config in etcd
+                //there was no config in Zookeeper set the file in config in Zookeeper
                 await fileConfigRepo.Set(fileConfig.CurrentValue);
             }
             else
             {
-                // create the internal config from etcd data
-                var internalConfig = await internalConfigCreator.Create(fileConfigFromEtcd.Data);
+                // create the internal config from Zookeeper data
+                var internalConfig = await internalConfigCreator.Create(fileConfigFromZookeeper.Data);
 
                 if (IsError(internalConfig))
                 {
@@ -85,9 +85,9 @@
             return response == null || response.IsError;
         }
 
-        private static bool ConfigNotStoredInEtcd(Response<FileConfiguration> fileConfigFromEtcd)
+        private static bool ConfigNotStoredInZookeeper(Response<FileConfiguration> fileConfigFromZookeeper)
         {
-            return fileConfigFromEtcd.Data == null;
+            return fileConfigFromZookeeper.Data == null;
         }
     }
 }

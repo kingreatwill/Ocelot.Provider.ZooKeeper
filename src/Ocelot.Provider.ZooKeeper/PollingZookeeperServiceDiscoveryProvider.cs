@@ -7,18 +7,18 @@
     using ServiceDiscovery.Providers;
     using Values;
 
-    public class PollEtcd : IServiceDiscoveryProvider
+    public class PollZookeeper : IServiceDiscoveryProvider
     {
         private readonly IOcelotLogger _logger;
-        private readonly IServiceDiscoveryProvider _etcdServiceDiscoveryProvider;
+        private readonly IServiceDiscoveryProvider _ZookeeperServiceDiscoveryProvider;
         private readonly Timer _timer;
         private bool _polling;
         private List<Service> _services;
 
-        public PollEtcd(int pollingInterval, IOcelotLoggerFactory factory, IServiceDiscoveryProvider etcdServiceDiscoveryProvider)
+        public PollZookeeper(int pollingInterval, IOcelotLoggerFactory factory, IServiceDiscoveryProvider ZookeeperServiceDiscoveryProvider)
         {
-            _logger = factory.CreateLogger<PollEtcd>();
-            _etcdServiceDiscoveryProvider = etcdServiceDiscoveryProvider;
+            _logger = factory.CreateLogger<PollZookeeper>();
+            _ZookeeperServiceDiscoveryProvider = ZookeeperServiceDiscoveryProvider;
             _services = new List<Service>();
 
             _timer = new Timer(
@@ -42,7 +42,7 @@
 
         private async Task Poll()
         {
-            _services = await _etcdServiceDiscoveryProvider.Get();
+            _services = await _ZookeeperServiceDiscoveryProvider.Get();
         }
     }
 }

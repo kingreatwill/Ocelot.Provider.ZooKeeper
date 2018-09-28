@@ -1,17 +1,17 @@
 ﻿namespace Ocelot.Provider.ZooKeeper
 {
-    public class EtcdRegistryConfiguration
+    public class ZookeeperRegistryConfiguration
     {
-        public EtcdRegistryConfiguration(string host, int port, string keyOfServiceInEtcd)
+        public ZookeeperRegistryConfiguration(string host, int port, string keyOfServiceInZookeeper)
         {
             this.Host = string.IsNullOrEmpty(host) ? "localhost" : host;
             this.Port = port > 0 ? port : 2379;
-            this.KeyOfServiceInEtcd = keyOfServiceInEtcd;
+            this.KeyOfServiceInZookeeper = keyOfServiceInZookeeper;
 
             // this.Token = token;
         }
 
-        public string KeyOfServiceInEtcd { get; }
+        public string KeyOfServiceInZookeeper { get; }
 
         public string Host { get; }
 

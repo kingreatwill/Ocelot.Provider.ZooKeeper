@@ -2,9 +2,9 @@
 {
     using Errors;
 
-    public class UnableToSetConfigInEtcdError : Error
+    public class UnableToSetConfigInZookeeperError : Error
     {
-        public UnableToSetConfigInEtcdError(string s)
+        public UnableToSetConfigInZookeeperError(string s)
             : base(s, OcelotErrorCode.UnknownError)
         {
         }
