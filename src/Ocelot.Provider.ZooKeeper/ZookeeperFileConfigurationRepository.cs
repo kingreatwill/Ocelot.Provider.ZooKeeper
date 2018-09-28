@@ -54,7 +54,7 @@
             {
                 return new OkResponse<FileConfiguration>(config);
             }
-            var queryResult = await _ZookeeperClient.GetAsync($"/{_configurationKey}/FileConfiguration");
+            var queryResult = await _ZookeeperClient.GetAsync($"/{_configurationKey}");
             if (string.IsNullOrWhiteSpace(queryResult))
             {
                 return new OkResponse<FileConfiguration>(null);
@@ -66,7 +66,7 @@
         public async Task<Response> Set(FileConfiguration ocelotConfiguration)
         {
             var json = JsonConvert.SerializeObject(ocelotConfiguration, Formatting.Indented);
-            var result = await _ZookeeperClient.SetAsync($"/{_configurationKey}/FileConfiguration", json);
+            var result = await _ZookeeperClient.SetAsync($"/{_configurationKey}", json);
 
             _cache.AddAndDelete(_configurationKey, ocelotConfiguration, TimeSpan.FromSeconds(3), _configurationKey);
 
