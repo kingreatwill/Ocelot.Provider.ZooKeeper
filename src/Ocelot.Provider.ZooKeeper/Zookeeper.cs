@@ -28,13 +28,13 @@
         public async Task<List<Service>> Get()
         {
             // Services/srvname/srvid
-            var queryResult = await _zookeeperClient.GetRangeAsync($"/{_config.KeyOfServiceInZookeeper}/Services/");
+            var queryResult = await _zookeeperClient.GetRangeAsync($"/Ocelot/Services/{_config.KeyOfServiceInZookeeper}");
 
             var services = new List<Service>();
 
             foreach (var dic in queryResult)
             {
-                var srvs = dic.Key.Split('/');
+                var srvs = dic.Key.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 if (srvs.Length == 4)
                 {
                     var serviceEntry = JsonConvert.DeserializeObject<ServiceEntry>(dic.Value);
